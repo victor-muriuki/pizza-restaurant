@@ -76,4 +76,4 @@ api.add_resource(PizzasResource, '/pizzas')
 api.add_resource(RestaurantPizzasResource, '/restaurant_pizzas')
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, port = 5555)
