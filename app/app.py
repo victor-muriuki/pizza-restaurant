@@ -1,6 +1,6 @@
 from flask import Flask, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
-from models import Pizza, Restaurant, RestaurantPizza, db
+from models import Pizza, Restaurant, RestaurantPizza
 from flask_migrate import Migrate
 from flask_restful import Api, Resource, reqparse, abort
 
@@ -9,6 +9,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
 db = SQLAlchemy(app)
 api = Api(app)
 migrate = Migrate(app, db)
+db.init-app(app)
 
 # Parser for POST requests to /restaurant_pizzas
 parser = reqparse.RequestParser()
