@@ -69,7 +69,7 @@ function Restaurants() {
 )}
 
       {/* Button to navigate to the Pizzas component */}
-      <Link to="/restaurant_pizzas">
+      <Link to="/add-restaurant-pizza">
         <button>Add Restaurant Pizza</button>
       </Link>
        {/* Button to navigate to the Pizzas component */}
