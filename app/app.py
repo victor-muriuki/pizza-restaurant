@@ -1,15 +1,19 @@
 from flask import Flask, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
-from models import Pizza, Restaurant, RestaurantPizza
+from models import db, Pizza, Restaurant, RestaurantPizza
 from flask_migrate import Migrate
+from flask_cors import CORS
 from flask_restful import Api, Resource, reqparse, abort
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
-db = SQLAlchemy(app)
-api = Api(app)
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+CORS(app)
+
+
+db.init_app(app)
 migrate = Migrate(app, db)
-db.init-app(app)
+api = Api(app)
 
 # Parser for POST requests to /restaurant_pizzas
 parser = reqparse.RequestParser()
