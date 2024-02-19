@@ -16,10 +16,10 @@ migrate = Migrate(app, db)
 api = Api(app)
 
 # Parser for POST requests to /restaurant_pizzas
-parser = reqparse.RequestParser()
-parser.add_argument('price', type=float, required=True, help='Price is required')
-parser.add_argument('pizza_id', type=int, required=True, help='Pizza ID is required')
-parser.add_argument('restaurant_id', type=int, required=True, help='Restaurant ID is required')
+# parser = reqparse.RequestParser()
+# parser.add_argument('price', type=float, required=True, help='Price is required')
+# parser.add_argument('pizza_id', type=int, required=True, help='Pizza ID is required')
+# parser.add_argument('restaurant_id', type=int, required=True, help='Restaurant ID is required')
 
 class RestaurantsResource(Resource):
     def get(self):
@@ -55,10 +55,19 @@ class PizzasResource(Resource):
 
 class RestaurantPizzasResource(Resource):
     def post(self):
-        args = parser.parse_args()
-        price = args['price']
-        pizza_id = args['pizza_id']
-        restaurant_id = args['restaurant_id']
+        price = request.form.get('price') or request.get_json().get('price')
+        pizza_id = request.form.get('pizza_id') or request.get_json().get('pizza_id')
+        restaurant_id = request.form.get('restaurant_id') or request.get_json().get('restaurant_id')
+
+        if not price or not pizza_id or not restaurant_id:
+            abort(400, message="Price, pizza ID, and restaurant ID are required.")
+
+        try:
+            price = float(price)
+            pizza_id = int(pizza_id)
+            restaurant_id = int(restaurant_id)
+        except ValueError:
+            abort(400, message="Price must be a number, and pizza and restaurant IDs must be integers.")
 
         restaurant_pizza = RestaurantPizza(price=price, pizza_id=pizza_id, restaurant_id=restaurant_id)
         db.session.add(restaurant_pizza)
@@ -73,7 +82,6 @@ class RestaurantPizzasResource(Resource):
         except:
             db.session.rollback()
             abort(400, message="Validation errors")
-
 # Adding routes to the resources
 api.add_resource(RestaurantsResource, '/restaurants')
 api.add_resource(RestaurantResource, '/restaurants/<int:id>')
