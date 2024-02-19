@@ -5,7 +5,7 @@ function Pizzas() {
   const [pizzas, setPizzas] = useState([]);
 
   useEffect(() => {
-    axios.get('/pizzas')
+    axios.get('http://localhost:5555/pizzas')
       .then(response => {
         setPizzas(response.data);
       })
